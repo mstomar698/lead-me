@@ -1,0 +1,45 @@
+extern crate percent_encoding;
+
+use percent_encoding::{utf8_percent_encode, AsciiSet, CONTROLS};
+
+// Used as part of the percent_encoding library
+const FRAGMENT: &AsciiSet = &CONTROLS.add(b' ').add(b'"').add(b'<').add(b'>').add(b'`');
+
+pub fn construct_gh_url(query: &str) -> String {
+    if query == "gh" {
+        let github_dotcom = "https://github.com";
+
+        github_dotcom.to_string()
+    } else {
+        let encoded_query = utf8_percent_encode(&query[3..], FRAGMENT).to_string();
+        let github_url = format!("https://github.com/{}", encoded_query);
+
+        github_url
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_construct_gh_profile_url_with_gh() {
+        let fake_query = "gh";
+        assert_eq!(construct_gh_url(fake_query), "https://github.com");
+    }
+
+    #[test]
+    fn test_construct_gh_profile_url_with_repo_url() {
+        let fake_query = "gh facebook";
+        assert_eq!(construct_gh_url(fake_query), "https://github.com/facebook");
+    }
+
+    #[test]
+    fn test_construct_gh_search_url_with_repo_url() {
+        let fake_query = "gh facebook/docusaurus";
+        assert_eq!(
+            construct_gh_url(fake_query),
+            "https://github.com/facebook/docusaurus"
+        );
+    }
+}
