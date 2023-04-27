@@ -13,8 +13,8 @@ rustup default nightly
 ### to run locally
 
 ```powershell
-git clone https://github.com/mstomar698/bookmarking-tool.git
-cd bookmarking-tool
+git clone https://github.com/mstomar698/lead-me.git
+cd lead-me
 cargo test
 cargo run
 cargo build
